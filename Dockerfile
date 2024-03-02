@@ -46,7 +46,7 @@ RUN apt-get update && \
     rm -rf ${NOVNC_HOME}/utils/websockify/.git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN /${SMAPP_APP} --appimage-extract
+RUN /${SMAPP_APP} --appimage-extract && mv squashfs-root SpacemeshApp && rm ${SMAPP_APP}
 
 # Copy Supervisor Daemon configuration 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

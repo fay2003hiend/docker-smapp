@@ -19,6 +19,6 @@ podman run \
     -v ${DATA_DIR}:/root/.config/Spacemesh \
     -v ${POST_DIR}:/root/post:ro \
     -p ${VNC_PORT}:8080 \
-    -e DISPLAY_WIDTH=1280 \
-    -e DISPLAY_HEIGHT=800 \
+    -e DISPLAY_WIDTH=1440 \
+    -e DISPLAY_HEIGHT=900 \
     smap_novnc
