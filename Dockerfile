@@ -1,14 +1,11 @@
 # Pull base image
-FROM debian:bullseye-slim
-
-# SMAPP version
-ARG SMAPP_VERSION=0.2.8
+FROM debian:bullseye
 
 # SMAPP Debian Package
-ARG SMAPP_APP=spacemesh_app_${SMAPP_VERSION}_amd64.deb
+ARG SMAPP_APP=Spacemesh.AppImage
 
 # Define software download URLs
-ARG SMAPP_URL=https://storage.googleapis.com/smapp/v${SMAPP_VERSION}/${SMAPP_APP}
+ARG SMAPP_URL=https://smapp.spacemesh.network/dist/v1.3.12/Spacemesh-1.3.12.AppImage
 
 # root Home
 ARG ROOT_HOME=/root
@@ -43,12 +40,13 @@ RUN apt-get update && \
     git clone --depth 1 https://github.com/novnc/noVNC ${NOVNC_HOME} && \
     git clone --depth 1 https://github.com/novnc/websockify ${NOVNC_HOME}/utils/websockify && \
     curl -# -L -o ${SMAPP_APP} ${SMAPP_URL} && \
-    dpkg -i ${SMAPP_APP} && \
+    chmod +x ${SMAPP_APP} && \
     mkdir -p ${ROOT_HOME}/.fluxbox && \
     rm -rf ${NOVNC_HOME}/.git && \
     rm -rf ${NOVNC_HOME}/utils/websockify/.git && \
-    rm -f ${SMAPP_APP} && \
     rm -rf /var/lib/apt/lists/*
+
+RUN /${SMAPP_APP} --appimage-extract
 
 # Copy Supervisor Daemon configuration 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
