@@ -1,5 +1,5 @@
 # Pull base image
-FROM debian:bullseye
+FROM fedora:39
 
 # SMAPP Debian Package
 ARG SMAPP_APP=Spacemesh.AppImage
@@ -14,39 +14,39 @@ ARG ROOT_HOME=/root
 ARG NOVNC_HOME=${ROOT_HOME}/noVNC
 
 # Install Fluxbox, noVNC and download SMAPP
-RUN apt-get update && \
-    env DEBIAN_FRONTEND=noninteractive apt reinstall -y ca-certificates && \
-        update-ca-certificates && \
-        apt-get install -y --no-install-recommends \
+RUN dnf check-update || true
+RUN dnf install -y ca-certificates
+RUN dnf install -y \
         ca-certificates \
         curl \
         eterm \
-        firefox-esr \
+        firefox \
         fluxbox \
         openssl \
-        libasound-dev \
-        libgbm-dev \
-        libnotify4 \
-        libnss3 \
-        libnspr4 \
-        libsecret-1-0 \
-        libsecret-common \
+        mesa-libgbm-devel \
+        libnotify-devel \
+        libnss-mysql \
+        libsecret \
         supervisor \
         x11vnc \
         xdg-utils \
         git \
-        x11-utils \
-        xvfb && \
-    git clone --depth 1 https://github.com/novnc/noVNC ${NOVNC_HOME} && \
+        xorg-x11-server-Xvfb
+RUN git clone --depth 1 https://github.com/novnc/noVNC ${NOVNC_HOME} && \
     git clone --depth 1 https://github.com/novnc/websockify ${NOVNC_HOME}/utils/websockify && \
     curl -# -L -o ${SMAPP_APP} ${SMAPP_URL} && \
     chmod +x ${SMAPP_APP} && \
     mkdir -p ${ROOT_HOME}/.fluxbox && \
     rm -rf ${NOVNC_HOME}/.git && \
-    rm -rf ${NOVNC_HOME}/utils/websockify/.git && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf ${NOVNC_HOME}/utils/websockify/.git
 
-RUN /${SMAPP_APP} --appimage-extract && mv squashfs-root SpacemeshApp && rm ${SMAPP_APP}
+RUN ./${SMAPP_APP} --appimage-extract && mv squashfs-root /SpacemeshApp && rm ${SMAPP_APP}
+# RUN apt update && apt install -y libssl3 libcups2 libatk1.0-0 libatk-bridge2.0-0
+# RUN apt install -y libgtk-3-0
+RUN dnf install -y mesa-libOpenCL
+
+# AMD YES
+RUN dnf install -y rocm-opencl rocm-smi
 
 # Copy Supervisor Daemon configuration 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -66,7 +66,6 @@ EXPOSE 7513/udp
 
 # Setup environment variables
 ENV HOME=${ROOT_HOME} \
-    DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     LC_ALL=C.UTF-8 \
