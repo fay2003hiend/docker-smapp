@@ -5,7 +5,7 @@ FROM fedora:39
 ARG SMAPP_APP=Spacemesh.AppImage
 
 # Define software download URLs
-ARG SMAPP_URL=https://smapp.spacemesh.network/dist/v1.3.12/Spacemesh-1.3.12.AppImage
+ARG SMAPP_URL=https://smapp.spacemesh.network/dist/v1.4.0/Spacemesh-1.4.0.AppImage
 
 # root Home
 ARG ROOT_HOME=/root
