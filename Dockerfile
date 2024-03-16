@@ -46,7 +46,7 @@ RUN ./${SMAPP_APP} --appimage-extract && mv squashfs-root /SpacemeshApp && rm ${
 RUN dnf install -y mesa-libOpenCL
 
 # AMD YES
-RUN dnf install -y rocm-opencl rocm-smi
+RUN dnf install -y rocm-hip rocminfo rocm-clinfo rocm-opencl rocm-smi
 
 # Copy Supervisor Daemon configuration 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
