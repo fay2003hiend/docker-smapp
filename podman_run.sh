@@ -7,14 +7,14 @@ if [ $# -lt 3 ]; then
     exit 1
 fi
 
+DATA_DIR=`realpath ${1}`
+POST_DIR=`realpath ${2}`
+VNC_PORT=${3}
+
 cd ${0%/*}
 podman build . -t smap_novnc
 
 set -x
-
-DATA_DIR=`realpath ${1}`
-POST_DIR=`realpath ${2}`
-VNC_PORT=${3}
 
 if [[ $# -eq 4 && $4 = shell ]]; then
     podman run -it --rm \
